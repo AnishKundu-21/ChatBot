@@ -118,24 +118,16 @@ The development command starts both the backend API server and the Vite frontend
 
 The recording below walks through the full assessment scenario, including all four sessions with users `maya` and `sam`.
 
-<iframe
-  src="https://drive.google.com/file/d/1s9vWO8pJ-tMRtYXhVBEbi5lHSTEYTvV1/preview"
-  width="100%"
-  height="480"
-  allow="autoplay; fullscreen"
-  allowfullscreen
-></iframe>
+<video src="demo.mp4" controls width="100%">
+  Your browser does not support embedded video.
+</video>
 
 <p align="center">
-  <a href="https://drive.google.com/file/d/1s9vWO8pJ-tMRtYXhVBEbi5lHSTEYTvV1/view?usp=sharing">
-    <img
-      src="https://drive.google.com/thumbnail?id=1s9vWO8pJ-tMRtYXhVBEbi5lHSTEYTvV1&sz=w1280"
-      alt="Assessment demo video — click to play"
-      width="100%"
-    />
+  <a href="https://github.com/AnishKundu-21/ChatBot/blob/main/demo.mp4">
+    Open or download <code>demo.mp4</code>
   </a>
   <br />
-  <em>Click the thumbnail to open the demo in Google Drive if the player above does not load.</em>
+  <em>If the player above does not load, use the link to view the video on GitHub.</em>
 </p>
 
 ## Evaluation Scenario
