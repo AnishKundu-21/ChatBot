@@ -116,54 +116,9 @@ The development command starts both the backend API server and the Vite frontend
 
 ## Demo Recording
 
-The recording walks through the full assessment scenario, including all four sessions with users `maya` and `sam`.
+The recording below walks through the full assessment scenario, including all four sessions with users `maya` and `sam`.
 
-<table cellpadding="10" cellspacing="0" width="100%">
-  <thead>
-    <tr>
-      <th align="left">Option</th>
-      <th align="left">Link</th>
-      <th align="left">Notes</th>
-    </tr>
-  </thead>
-  <tbody>
-    <tr>
-      <td><strong>Watch online (recommended)</strong></td>
-      <td><a href="https://drive.google.com/file/d/1s9vWO8pJ-tMRtYXhVBEbi5lHSTEYTvV1/view?usp=sharing"><strong>▶ Play demo on Google Drive</strong></a></td>
-      <td>Streams in the browser — no download required</td>
-    </tr>
-    <tr>
-      <td>Download from repository</td>
-      <td><a href="https://github.com/AnishKundu-21/ChatBot/raw/refs/heads/main/demo.mp4"><code>demo.mp4</code> (15 MB)</a></td>
-      <td>Raw file hosted in this repository</td>
-    </tr>
-  </tbody>
-</table>
-
-<p align="center">
-  <a href="https://drive.google.com/file/d/1s9vWO8pJ-tMRtYXhVBEbi5lHSTEYTvV1/view?usp=sharing">
-    <img
-      src="https://drive.google.com/thumbnail?id=1s9vWO8pJ-tMRtYXhVBEbi5lHSTEYTvV1&sz=w1280"
-      alt="Assessment demo — click to play on Google Drive"
-      width="100%"
-    />
-  </a>
-</p>
-
-<details>
-  <summary><strong>Why doesn’t <code>demo.mp4</code> play inline from the repository?</strong></summary>
-  <br />
-  GitHub does not render <code>&lt;video src="demo.mp4"&gt;</code> for files committed to a repository.
-  Inline playback in README is only supported for videos uploaded via <strong>drag-and-drop</strong> while editing on GitHub,
-  which produces a <code>github.com/user-attachments/assets/...</code> URL.
-  <br /><br />
-  To embed the player directly in this README:
-  <ol>
-    <li>Open this file on GitHub and click <strong>Edit</strong></li>
-    <li>Drag <code>demo.mp4</code> into the editor</li>
-    <li>GitHub will insert a playable <code>user-attachments</code> URL — commit that change</li>
-  </ol>
-</details>
+https://github.com/user-attachments/assets/3a052e31-970c-40dd-9385-1427f4ae4c4b
 
 ## Evaluation Scenario
 
