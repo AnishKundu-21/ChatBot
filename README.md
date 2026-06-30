@@ -1,12 +1,13 @@
 # Memory Chatbot
 
-A web chatbot with **persistent per-user memory** across sessions. Built for the internship exercise — each `user_id` has isolated, durable facts stored in SQLite that survive "New Session" clicks.
+A web chatbot with **persistent per-user memory** across sessions. Built for the internship exercise — each `user_id` has isolated, durable facts stored in MongoDB that survive "New Session" clicks.
 
 ## Prerequisites
 
 - [Bun](https://bun.sh) (package manager)
 - Node.js 20+
-- Gemini API key from [Google AI Studio](https://aistudio.google.com/apikey) (free tier available)
+- MongoDB running locally ([MongoDB Community](https://www.mongodb.com/try/download/community))
+- Gemini API key from [Google AI Studio](https://aistudio.google.com/apikey)
 
 ## Setup
 
@@ -19,7 +20,9 @@ Edit `.env`:
 
 ```
 GEMINI_API_KEY=your-key-from-ai-studio
-GEMINI_MODEL=gemini-3.5-flash
+GEMINI_MODEL=gemini-2.0-flash
+MONGODB_URI=mongodb://localhost:27017
+MONGODB_DB_NAME=memory_chatbot
 ```
 
 ## Run
@@ -67,7 +70,7 @@ Click **New Session**. Change **User ID** to `sam`.
 
 - **Frontend:** React + Vite + Tailwind
 - **Backend:** Hono on Node.js
-- **Storage:** SQLite (`memory.db`)
+- **Storage:** MongoDB (`memory_chatbot` database, `memories` + `messages` collections)
 - **LLM:** Google Gemini via AI Studio (extraction + chat)
 
 Each message triggers two LLM calls: one to respond, one to extract durable facts.

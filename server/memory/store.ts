@@ -1,22 +1,18 @@
-import Database from "better-sqlite3";
-import path from "path";
-import { fileURLToPath } from "url";
-
-const __dirname = path.dirname(fileURLToPath(import.meta.url));
-const DB_PATH = path.join(__dirname, "../../memory.db");
+import { ObjectId } from "mongodb";
+import { getDb } from "./db.js";
 
 export interface Memory {
-  id: number;
+  id: string;
   user_id: string;
   category: string;
   fact: string;
-  is_active: number;
+  is_active: boolean;
   created_at: string;
   updated_at: string;
 }
 
 export interface ChatMessage {
-  id: number;
+  id: string;
   session_id: string;
   user_id: string;
   role: "user" | "assistant";
@@ -31,93 +27,118 @@ export interface ExtractedFact {
   action: "add" | "supersede";
 }
 
-const db = new Database(DB_PATH);
-db.pragma("journal_mode = WAL");
-
-db.exec(`
-  CREATE TABLE IF NOT EXISTS memories (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    user_id TEXT NOT NULL,
-    category TEXT NOT NULL,
-    fact TEXT NOT NULL,
-    is_active INTEGER NOT NULL DEFAULT 1,
-    created_at TEXT NOT NULL DEFAULT (datetime('now')),
-    updated_at TEXT NOT NULL DEFAULT (datetime('now'))
-  );
-
-  CREATE TABLE IF NOT EXISTS messages (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    session_id TEXT NOT NULL,
-    user_id TEXT NOT NULL,
-    role TEXT NOT NULL CHECK(role IN ('user', 'assistant')),
-    content TEXT NOT NULL,
-    created_at TEXT NOT NULL DEFAULT (datetime('now'))
-  );
-
-  CREATE INDEX IF NOT EXISTS idx_memories_user_active ON memories(user_id, is_active);
-  CREATE INDEX IF NOT EXISTS idx_messages_session ON messages(session_id);
-`);
-
-export function getActiveMemories(userId: string): Memory[] {
-  return db
-    .prepare(
-      `SELECT * FROM memories WHERE user_id = ? AND is_active = 1 ORDER BY updated_at DESC`
-    )
-    .all(userId) as Memory[];
+interface MemoryDoc {
+  _id: ObjectId;
+  user_id: string;
+  category: string;
+  fact: string;
+  is_active: boolean;
+  created_at: Date;
+  updated_at: Date;
 }
 
-export function getSessionMessages(
+interface MessageDoc {
+  _id: ObjectId;
+  session_id: string;
+  user_id: string;
+  role: "user" | "assistant";
+  content: string;
+  created_at: Date;
+}
+
+function toMemory(doc: MemoryDoc): Memory {
+  return {
+    id: doc._id.toHexString(),
+    user_id: doc.user_id,
+    category: doc.category,
+    fact: doc.fact,
+    is_active: doc.is_active,
+    created_at: doc.created_at.toISOString(),
+    updated_at: doc.updated_at.toISOString(),
+  };
+}
+
+function toMessage(doc: MessageDoc): ChatMessage {
+  return {
+    id: doc._id.toHexString(),
+    session_id: doc.session_id,
+    user_id: doc.user_id,
+    role: doc.role,
+    content: doc.content,
+    created_at: doc.created_at.toISOString(),
+  };
+}
+
+export async function getActiveMemories(userId: string): Promise<Memory[]> {
+  const docs = await getDb()
+    .collection<MemoryDoc>("memories")
+    .find({ user_id: userId, is_active: true })
+    .sort({ updated_at: -1 })
+    .toArray();
+
+  return docs.map(toMemory);
+}
+
+export async function getSessionMessages(
   sessionId: string,
   userId: string
-): ChatMessage[] {
-  return db
-    .prepare(
-      `SELECT * FROM messages WHERE session_id = ? AND user_id = ? ORDER BY id ASC`
-    )
-    .all(sessionId, userId) as ChatMessage[];
+): Promise<ChatMessage[]> {
+  const docs = await getDb()
+    .collection<MessageDoc>("messages")
+    .find({ session_id: sessionId, user_id: userId })
+    .sort({ created_at: 1 })
+    .toArray();
+
+  return docs.map(toMessage);
 }
 
-export function saveMessage(
+export async function saveMessage(
   sessionId: string,
   userId: string,
   role: "user" | "assistant",
   content: string
-): void {
-  db.prepare(
-    `INSERT INTO messages (session_id, user_id, role, content) VALUES (?, ?, ?, ?)`
-  ).run(sessionId, userId, role, content);
+): Promise<void> {
+  await getDb().collection<MessageDoc>("messages").insertOne({
+    session_id: sessionId,
+    user_id: userId,
+    role,
+    content,
+    created_at: new Date(),
+  });
 }
 
-export function clearUserMemories(userId: string): number {
-  const result = db
-    .prepare(`DELETE FROM memories WHERE user_id = ?`)
-    .run(userId);
-  return result.changes;
+export async function clearUserMemories(userId: string): Promise<number> {
+  const result = await getDb()
+    .collection("memories")
+    .deleteMany({ user_id: userId });
+  return result.deletedCount;
 }
 
-export function applyExtractedFacts(
+export async function applyExtractedFacts(
   userId: string,
   facts: ExtractedFact[]
-): void {
-  const supersede = db.prepare(
-    `UPDATE memories SET is_active = 0, updated_at = datetime('now')
-     WHERE user_id = ? AND category = ? AND is_active = 1`
-  );
-  const insert = db.prepare(
-    `INSERT INTO memories (user_id, category, fact) VALUES (?, ?, ?)`
-  );
+): Promise<void> {
+  const durableFacts = facts.filter((f) => f.durability === "durable");
+  if (durableFacts.length === 0) return;
 
-  const apply = db.transaction((items: ExtractedFact[]) => {
-    for (const item of items) {
-      if (item.durability !== "durable") continue;
+  const memories = getDb().collection<MemoryDoc>("memories");
+  const now = new Date();
 
-      if (item.action === "supersede") {
-        supersede.run(userId, item.category);
-      }
-
-      insert.run(userId, item.category, item.fact);
+  for (const item of durableFacts) {
+    if (item.action === "supersede") {
+      await memories.updateMany(
+        { user_id: userId, category: item.category, is_active: true },
+        { $set: { is_active: false, updated_at: now } }
+      );
     }
-  });
 
-  apply(facts);
+    await memories.insertOne({
+      user_id: userId,
+      category: item.category,
+      fact: item.fact,
+      is_active: true,
+      created_at: now,
+      updated_at: now,
+    });
+  }
 }

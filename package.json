@@ -12,14 +12,14 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.14.3",
-    "better-sqlite3": "^11.9.0",
+    "mongodb": "^6.16.0",
     "dotenv": "^16.5.0",
     "hono": "^4.7.10",
     "uuid": "^11.1.0"
   },
   "devDependencies": {
     "@tailwindcss/vite": "^4.1.8",
-    "@types/better-sqlite3": "^7.6.13",
+
     "@types/react": "^19.1.4",
     "@types/react-dom": "^19.1.5",
     "@types/uuid": "^10.0.0",

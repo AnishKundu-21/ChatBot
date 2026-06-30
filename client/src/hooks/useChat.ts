@@ -6,7 +6,7 @@ export interface Message {
 }
 
 export interface Memory {
-  id: number;
+  id: string;
   category: string;
   fact: string;
   updated_at: string;

@@ -1,6 +1,6 @@
 import { getActiveMemories } from "./store.js";
 
-export function retrieveMemories(userId: string): string[] {
-  const memories = getActiveMemories(userId);
+export async function retrieveMemories(userId: string): Promise<string[]> {
+  const memories = await getActiveMemories(userId);
   return memories.map((m) => m.fact);
 }

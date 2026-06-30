@@ -22,9 +22,9 @@ chatRoutes.post("/session/new", async (c) => {
   return c.json({ session_id: uuidv4() });
 });
 
-chatRoutes.get("/memories/:user_id", (c) => {
+chatRoutes.get("/memories/:user_id", async (c) => {
   const userId = c.req.param("user_id");
-  const memories = getActiveMemories(userId);
+  const memories = await getActiveMemories(userId);
   return c.json({
     memories: memories.map((m) => ({
       id: m.id,
@@ -35,12 +35,12 @@ chatRoutes.get("/memories/:user_id", (c) => {
   });
 });
 
-chatRoutes.delete("/memories/:user_id", (c) => {
+chatRoutes.delete("/memories/:user_id", async (c) => {
   const userId = c.req.param("user_id")?.trim();
   if (!userId) {
     return c.json({ error: "user_id is required" }, 400);
   }
-  const deleted = clearUserMemories(userId);
+  const deleted = await clearUserMemories(userId);
   return c.json({ deleted, memories: [] });
 });
 
@@ -60,10 +60,10 @@ chatRoutes.post("/chat", async (c) => {
       return c.json({ error: "user_id, session_id, and message are required" }, 400);
     }
 
-    const memories = retrieveMemories(userId);
-    const history = getSessionMessages(sessionId, userId);
+    const memories = await retrieveMemories(userId);
+    const history = await getSessionMessages(sessionId, userId);
 
-    saveMessage(sessionId, userId, "user", message);
+    await saveMessage(sessionId, userId, "user", message);
 
     const chatMessages = history.map((m) => ({
       role: m.role,
@@ -77,12 +77,12 @@ chatRoutes.post("/chat", async (c) => {
       { temperature: 0.5 }
     );
 
-    saveMessage(sessionId, userId, "assistant", reply);
+    await saveMessage(sessionId, userId, "assistant", reply);
 
     const extracted = await extractFacts(message, memories);
-    applyExtractedFacts(userId, extracted);
+    await applyExtractedFacts(userId, extracted);
 
-    const updatedMemories = retrieveMemories(userId);
+    const updatedMemories = await retrieveMemories(userId);
 
     return c.json({
       reply,
