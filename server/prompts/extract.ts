@@ -18,5 +18,6 @@ Rules:
 - durability=transient: weather, mood, passing feelings, small talk — do NOT store these.
 - action=supersede when a new fact replaces an old one in the same category (e.g. job change).
 - action=add for new facts that don't replace an existing category.
-- If nothing durable to extract, return {"facts": []}.
+- Do NOT re-extract facts that already appear in the existing known facts list.
+- If nothing new to extract, return {"facts": []}.
 - Keep each fact concise (one sentence).`;

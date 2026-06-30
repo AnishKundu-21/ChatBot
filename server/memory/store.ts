@@ -76,7 +76,17 @@ export async function getActiveMemories(userId: string): Promise<Memory[]> {
     .sort({ updated_at: -1 })
     .toArray();
 
-  return docs.map(toMemory);
+  const seen = new Set<string>();
+  const deduped: MemoryDoc[] = [];
+
+  for (const doc of docs) {
+    const key = memoryKey(doc.category, doc.fact);
+    if (seen.has(key)) continue;
+    seen.add(key);
+    deduped.push(doc);
+  }
+
+  return deduped.map(toMemory);
 }
 
 export async function getSessionMessages(
@@ -114,6 +124,14 @@ export async function clearUserMemories(userId: string): Promise<number> {
   return result.deletedCount;
 }
 
+function normalizeFact(fact: string): string {
+  return fact.toLowerCase().trim().replace(/\s+/g, " ");
+}
+
+function memoryKey(category: string, fact: string): string {
+  return `${category}::${normalizeFact(fact)}`;
+}
+
 export async function applyExtractedFacts(
   userId: string,
   facts: ExtractedFact[]
@@ -124,12 +142,31 @@ export async function applyExtractedFacts(
   const memories = getDb().collection<MemoryDoc>("memories");
   const now = new Date();
 
+  const activeDocs = await memories
+    .find({ user_id: userId, is_active: true })
+    .toArray();
+
+  const activeKeys = new Set(
+    activeDocs.map((m) => memoryKey(m.category, m.fact))
+  );
+
   for (const item of durableFacts) {
     if (item.action === "supersede") {
       await memories.updateMany(
         { user_id: userId, category: item.category, is_active: true },
         { $set: { is_active: false, updated_at: now } }
       );
+
+      for (const key of activeKeys) {
+        if (key.startsWith(`${item.category}::`)) {
+          activeKeys.delete(key);
+        }
+      }
+    }
+
+    const key = memoryKey(item.category, item.fact);
+    if (activeKeys.has(key)) {
+      continue;
     }
 
     await memories.insertOne({
@@ -140,5 +177,7 @@ export async function applyExtractedFacts(
       created_at: now,
       updated_at: now,
     });
+
+    activeKeys.add(key);
   }
 }
