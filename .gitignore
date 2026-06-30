@@ -8,5 +8,5 @@ memory.db-*
 page_*.png
 terminals/
 scripts/
-intership_exercises/
-.gitignore
+intership_exercises.pdf
+*.pdf
