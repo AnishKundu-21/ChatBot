@@ -1,7 +1,3 @@
-
-
-https://github.com/user-attachments/assets/3a052e31-970c-40dd-9385-1427f4ae4c4b
-
 # Memory Chatbot
 
 A web-based conversational agent with persistent, per-user memory across independent sessions. The application extracts durable facts from natural language dialogue, stores them in a local MongoDB database, and retrieves them in subsequent sessions to inform future responses. User memory is fully isolated by `user_id`.
