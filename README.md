@@ -114,6 +114,15 @@ bun run dev
 
 The development command starts both the backend API server and the Vite frontend concurrently. API requests from the frontend are proxied automatically.
 
+## Demo Recording
+
+The video below walks through the full assessment scenario, including all four sessions with users `maya` and `sam`.
+
+<video src="demo.mp4" controls width="100%">
+  Your browser does not support embedded video.
+  <a href="demo.mp4">Download demo.mp4</a>
+</video>
+
 ## Evaluation Scenario
 
 The application is designed to satisfy the assessment script below. Each session represents a separate program run. Select **New Session** between sessions to clear conversational context while preserving stored memories.
