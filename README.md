@@ -6,7 +6,7 @@ A web chatbot with **persistent per-user memory** across sessions. Built for the
 
 - [Bun](https://bun.sh) (package manager)
 - Node.js 20+
-- OpenRouter API key ([openrouter.ai/keys](https://openrouter.ai/keys))
+- Gemini API key from [Google AI Studio](https://aistudio.google.com/apikey) (free tier available)
 
 ## Setup
 
@@ -18,8 +18,8 @@ cp .env.example .env
 Edit `.env`:
 
 ```
-OPENROUTER_API_KEY=sk-or-your-key
-OPENROUTER_MODEL=openrouter/free   # or any free model from openrouter.ai/models
+GEMINI_API_KEY=your-key-from-ai-studio
+GEMINI_MODEL=gemini-3.5-flash
 ```
 
 ## Run
@@ -68,6 +68,6 @@ Click **New Session**. Change **User ID** to `sam`.
 - **Frontend:** React + Vite + Tailwind
 - **Backend:** Hono on Node.js
 - **Storage:** SQLite (`memory.db`)
-- **LLM:** OpenRouter (extraction + chat)
+- **LLM:** Google Gemini via AI Studio (extraction + chat)
 
 Each message triggers two LLM calls: one to respond, one to extract durable facts.

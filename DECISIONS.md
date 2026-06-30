@@ -6,7 +6,7 @@ We persist **durable identity and preference facts**: name, job/employer, dietar
 
 ## How does extraction work — when does it run, what does it cost per message?
 
-Extraction runs **after every user message**, as a separate LLM call that returns structured JSON (`category`, `fact`, `durability`, `action`). This costs **2 LLM calls per user turn** (respond + extract). At demo scale with OpenRouter free models, that's effectively $0. Running extraction on every message is simple and ensures nothing is missed; at higher scale you'd batch, debounce, or only extract when heuristics suggest new information.
+Extraction runs **after every user message**, as a separate LLM call that returns structured JSON (`category`, `fact`, `durability`, `action`). This costs **2 LLM calls per user turn** (respond + extract). At demo scale with Gemini AI Studio's free tier, that's effectively $0. Running extraction on every message is simple and ensures nothing is missed; at higher scale you'd batch, debounce, or only extract when heuristics suggest new information.
 
 ## Walk us through exactly what happens in storage at step 5 (the job change).
 

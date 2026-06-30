@@ -1,4 +1,4 @@
-import { chatCompletion, parseJsonFromLLM } from "../llm/openrouter.js";
+import { chatCompletion, parseJsonFromLLM } from "../llm/gemini.js";
 import { EXTRACTION_SYSTEM_PROMPT } from "../prompts/extract.js";
 import type { ExtractedFact } from "./store.js";
 
@@ -23,7 +23,7 @@ export async function extractFacts(
         content: `${context}New user message:\n"${userMessage}"\n\nExtract durable facts.`,
       },
     ],
-    { temperature: 0.1, maxTokens: 1024 }
+    { temperature: 0.1, maxTokens: 1024, jsonMode: true }
   );
 
   const parsed = parseJsonFromLLM<ExtractionResult>(response);

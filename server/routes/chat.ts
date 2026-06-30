@@ -1,6 +1,6 @@
 import { Hono } from "hono";
 import { v4 as uuidv4 } from "uuid";
-import { chatCompletion } from "../llm/openrouter.js";
+import { chatCompletion } from "../llm/gemini.js";
 import { buildChatSystemPrompt } from "../prompts/chat.js";
 import { extractFacts } from "../memory/extractor.js";
 import { retrieveMemories } from "../memory/retriever.js";

@@ -8,8 +8,22 @@ app.use(
   "/*",
   cors({
     origin: ["http://localhost:5173", "http://127.0.0.1:5173"],
-    allowMethods: ["GET", "POST", "OPTIONS"],
+    allowMethods: ["GET", "POST", "DELETE", "OPTIONS"],
     allowHeaders: ["Content-Type"],
+  })
+);
+
+app.get("/api", (c) =>
+  c.json({
+    status: "ok",
+    message: "Memory Chatbot API — open http://localhost:5173 for the UI",
+    endpoints: {
+      health: "GET /api/health",
+      chat: "POST /api/chat",
+      newSession: "POST /api/session/new",
+      memories: "GET /api/memories/:user_id",
+      clearMemories: "DELETE /api/memories/:user_id",
+    },
   })
 );
 
