@@ -2,8 +2,11 @@ node_modules/
 dist/
 .env
 memory.db
+memory.db-*
+
 *.png
 page_*.png
 terminals/
 scripts/
+intership_exercises/
 .gitignore
