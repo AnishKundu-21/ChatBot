@@ -6,3 +6,4 @@ memory.db
 page_*.png
 terminals/
 scripts/
+.gitignore
