@@ -116,12 +116,27 @@ The development command starts both the backend API server and the Vite frontend
 
 ## Demo Recording
 
-The video below walks through the full assessment scenario, including all four sessions with users `maya` and `sam`.
+The recording below walks through the full assessment scenario, including all four sessions with users `maya` and `sam`.
 
-<video src="demo.mp4" controls width="100%">
-  Your browser does not support embedded video.
-  <a href="demo.mp4">Download demo.mp4</a>
-</video>
+<iframe
+  src="https://drive.google.com/file/d/1s9vWO8pJ-tMRtYXhVBEbi5lHSTEYTvV1/preview"
+  width="100%"
+  height="480"
+  allow="autoplay; fullscreen"
+  allowfullscreen
+></iframe>
+
+<p align="center">
+  <a href="https://drive.google.com/file/d/1s9vWO8pJ-tMRtYXhVBEbi5lHSTEYTvV1/view?usp=sharing">
+    <img
+      src="https://drive.google.com/thumbnail?id=1s9vWO8pJ-tMRtYXhVBEbi5lHSTEYTvV1&sz=w1280"
+      alt="Assessment demo video — click to play"
+      width="100%"
+    />
+  </a>
+  <br />
+  <em>Click the thumbnail to open the demo in Google Drive if the player above does not load.</em>
+</p>
 
 ## Evaluation Scenario
 
