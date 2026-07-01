@@ -33,12 +33,26 @@ A web-based conversational agent with persistent, per-user memory across indepen
 
 ## Installation
 
+### 1. Clone the repository
+
+```bash
+git clone https://github.com/AnishKundu-21/ChatBot.git
+cd ChatBot
+```
+
+### 2. Install dependencies
+
 ```bash
 bun install
+```
+
+### 3. Configure environment variables
+
+```bash
 cp .env.example .env
 ```
 
-Configure the following environment variables in `.env`:
+Open `.env` and set your values:
 
 <table cellpadding="10" cellspacing="0" width="100%">
   <thead>
@@ -77,13 +91,21 @@ Configure the following environment variables in `.env`:
   </tbody>
 </table>
 
-Ensure the MongoDB service is running before starting the application.
+Obtain a Gemini API key at [Google AI Studio](https://aistudio.google.com/apikey).
 
-## Running the Application
+### 4. Start MongoDB
+
+Ensure MongoDB Community Edition is installed and the service is running locally before starting the application. The default connection string `mongodb://localhost:27017` is used unless overridden in `.env`.
+
+### 5. Run the application
 
 ```bash
 bun run dev
 ```
+
+Open the web interface at [http://localhost:5173](http://localhost:5173).
+
+## Service URLs
 
 <table cellpadding="10" cellspacing="0" width="100%">
   <thead>

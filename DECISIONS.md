@@ -10,7 +10,7 @@ This distinction is enforced programmatically rather than left to implicit model
 
 Fact extraction runs once per user message, immediately after the assistant response is generated and persisted. It is implemented as a dedicated language model call, separate from the conversational response call. The extractor receives the user's message along with any existing known facts and returns structured JSON containing `category`, `fact`, `durability`, and `action` fields for each candidate memory.
 
-Each user turn therefore incurs two language model invocations: one to produce the reply, and one to extract facts. JSON-mode output is used for the extraction call to improve structural reliability. Running extraction on every message trades efficiency for completeness at the current scale; no facts are missed due to skipped turns, and the logic remains straightforward to reason about and debug.
+The cost per message is **two LLM calls**: one invocation to generate the conversational reply, and one invocation to extract and evaluate durable facts. The first call handles conversation; the second runs immediately afterward on the same user message. JSON-mode output is used on the extraction call to improve structural reliability. Both calls are made through the Google Gemini API on every user turn. In production use, standard LLM API pricing would apply to each invocation, billed according to input and output token usage.
 
 ## Walk us through exactly what happens in storage at step 5 (the job change).
 
